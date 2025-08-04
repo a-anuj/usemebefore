@@ -50,9 +50,9 @@ class _AuthScreenState extends State<AuthScreen> {
               Text(
                 _islogin ? "Login." : "Signup.",
                 style: GoogleFonts.lato(
-                  fontSize: 50,
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold
+                    fontSize: 50,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold
                 ),
               ),
               const SizedBox(height: 24),
@@ -87,9 +87,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           obscureText: _isObscured,
                           decoration: InputDecoration(
                             labelText: "Password",
-                              labelStyle: GoogleFonts.lato(
-                                fontSize: 17,
-                              ),
+                            labelStyle: GoogleFonts.lato(
+                              fontSize: 17,
+                            ),
                             suffixIcon: IconButton(
                               icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off),
                               onPressed: () => setState(() => _isObscured = !_isObscured),
@@ -103,9 +103,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             : ElevatedButton(
                           onPressed: _login,
                           child: Text(
-                              _islogin ? "Login" : "Signup",
+                            _islogin ? "Login" : "Signup",
                             style: GoogleFonts.lato(
-                              fontSize: 18
+                                fontSize: 18
                             ),
 
                           ),
@@ -113,10 +113,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         TextButton(
                             onPressed: toggleLogin,
                             child: Text(
-                                "Already have an account.",
-                                style: GoogleFonts.lato(
+                              "Already have an account.",
+                              style: GoogleFonts.lato(
                                 fontSize: 15,
-                                ),
+                              ),
                             )
                         )
                       ],
