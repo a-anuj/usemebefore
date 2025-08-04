@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "954409290205",
+    "project_id": "usemebefore",
+    "storage_bucket": "usemebefore.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954409290205:android:47cb9394fcfa8bf69d8e34",
+        "android_client_info": {
+          "package_name": "com.example.usemebefore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARPdKqJBq7RXYtLXUN47r8G6lGjiwcROw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
