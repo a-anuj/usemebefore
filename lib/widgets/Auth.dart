@@ -10,12 +10,19 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  var _islogin = true;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isObscured = true;
 
   final _formKey = GlobalKey<FormState>();
+
+  void toggleLogin(){
+    setState(() {
+      _islogin = !_islogin;
+    });
+  }
 
   void _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -33,7 +40,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -41,14 +48,16 @@ class _AuthScreenState extends State<AuthScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Login.",
+                _islogin ? "Login." : "Signup.",
                 style: GoogleFonts.lato(
                   fontSize: 50,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold
                 ),
               ),
               const SizedBox(height: 24),
               Card(
+                color: Theme.of(context).colorScheme.secondaryContainer,
                 elevation: 8,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -70,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               )
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (val) => val != null && !val.contains('@') ? "Enter valid email" : null,
+                          validator: (val) => val != null && !val.contains('@') ? "Enter a valid email" : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -86,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               onPressed: () => setState(() => _isObscured = !_isObscured),
                             ),
                           ),
-                          validator: (val) => val != null && val.length < 6 ? "Min 6 chars" : null,
+                          validator: (val) => val != null && val.length < 6 ? "Min 6 characters required" : null,
                         ),
                         const SizedBox(height: 32),
                         _isLoading
@@ -94,13 +103,22 @@ class _AuthScreenState extends State<AuthScreen> {
                             : ElevatedButton(
                           onPressed: _login,
                           child: Text(
-                              "Login",
+                              _islogin ? "Login" : "Signup",
                             style: GoogleFonts.lato(
                               fontSize: 18
                             ),
 
                           ),
                         ),
+                        TextButton(
+                            onPressed: toggleLogin,
+                            child: Text(
+                                "Already have an account.",
+                                style: GoogleFonts.lato(
+                                fontSize: 15,
+                                ),
+                            )
+                        )
                       ],
                     ),
                   ),
