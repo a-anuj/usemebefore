@@ -3,7 +3,7 @@ import 'package:usemebefore/widgets/Item.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({super.key, required this.food});
-  final FoodItem food;
+  final Item food;
 
   @override
   Widget build(BuildContext context) {
