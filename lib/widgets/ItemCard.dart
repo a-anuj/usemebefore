@@ -10,18 +10,37 @@ class ItemCard extends StatelessWidget {
     return Card(
       color: Theme.of(context).colorScheme.onInverseSurface,
       margin: const EdgeInsets.all(12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(food.title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text("Expires on: ${food.expiryDate}"),
-            Text("Storage: ${food.storage}"),
-            Text("Note: ${food.note}"),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 🖼 Image part
+          if (food.imageUrl.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              child: Image.network(
+                food.imageUrl,
+                width: double.infinity,
+                height: 180,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.broken_image),
+              ),
+            ),
+          // 📝 Text part
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(food.title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text("Expires on: ${food.expiryDate}"),
+                Text("Storage: ${food.storage}"),
+                Text("Note: ${food.note}"),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
