@@ -68,17 +68,6 @@ class _AuthScreenState extends State<AuthScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  _islogin ? "Login." : "Signup.",
-                  style: GoogleFonts.lato(
-                      fontSize: 50,
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .primary,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
                 const SizedBox(height: 24),
                 Card(
                   color: Theme
@@ -95,7 +84,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            _islogin ? "Login." : "Signup.",
+                            style: GoogleFonts.lato(
+                                fontSize: 50,
+                                color: Theme
+                                    .of(context)
+                                    .colorScheme
+                                    .primary,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
                           const SizedBox(height: 32),
                           TextFormField(
                             controller: _emailController,
