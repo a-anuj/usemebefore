@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:usemebefore/widgets/foodItem.dart';
-import 'package:usemebefore/widgets/FoodCard.dart';
+import 'package:usemebefore/widgets/Item.dart';
+import 'package:usemebefore/widgets/ItemCard.dart';
 
 class Landing extends StatefulWidget{
   const Landing ({super.key});
@@ -14,15 +14,15 @@ class Landing extends StatefulWidget{
 }
 
 class _LandingState extends State<Landing>{
-  List<FoodItem> foodList = [
-    FoodItem(
+  List<Item> foodList = [
+    Item(
       title: 'Milk',
       expiryDate: '2025-08-10',
       storage: 'Fridge',
       note: 'Use within 2 days',
       imageUrl: "Pass for now"
     ),
-    FoodItem(
+    Item(
       title: 'Eggs',
       expiryDate: '2025-08-12',
       storage: 'Fridge',
@@ -64,7 +64,7 @@ class _LandingState extends State<Landing>{
         child: ListView.builder(
           itemCount: foodList.length,
           itemBuilder: (context, index) {
-            return FoodCard(food: foodList[index]);
+            return ItemCard(food: foodList[index]);
           },
         )
 

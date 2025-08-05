@@ -1,11 +1,11 @@
-class FoodItem {
+class Item {
   final String title;
   final String expiryDate;
   final String storage;
   final String note;
   final String imageUrl;
 
-  FoodItem({
+  Item({
     required this.title,
     required this.expiryDate,
     required this.storage,

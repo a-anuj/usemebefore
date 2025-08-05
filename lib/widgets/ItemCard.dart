@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:usemebefore/widgets/foodItem.dart';
+import 'package:usemebefore/widgets/Item.dart';
 
-class FoodCard extends StatelessWidget {
-  const FoodCard({super.key, required this.food});
+class ItemCard extends StatelessWidget {
+  const ItemCard({super.key, required this.food});
   final FoodItem food;
 
   @override
