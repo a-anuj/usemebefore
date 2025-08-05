@@ -18,12 +18,12 @@ void main() async {
       ),
         home: StreamBuilder(stream:
         FirebaseAuth.instance.authStateChanges(),
-            builder: (ctx,snapshot){
-              if(snapshot.hasData){
-                return Landing();
-              }
-              return AuthScreen();
-            }),
+        builder: (ctx,snapshot){
+          if(snapshot.hasData){
+            return Landing();
+          }
+          return AuthScreen();
+        }),
   ) );
 }
 
