@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:usemebefore/widgets/foodItem.dart';
+import 'package:usemebefore/widgets/FoodCard.dart';
 
 class Landing extends StatefulWidget{
   const Landing ({super.key});
@@ -13,6 +14,25 @@ class Landing extends StatefulWidget{
 }
 
 class _LandingState extends State<Landing>{
+  List<FoodItem> foodList = [
+    FoodItem(
+      title: 'Milk',
+      expiryDate: '2025-08-10',
+      storage: 'Fridge',
+      note: 'Use within 2 days',
+      imageUrl: "Pass for now"
+    ),
+    FoodItem(
+      title: 'Eggs',
+      expiryDate: '2025-08-12',
+      storage: 'Fridge',
+      note: 'Boil before use',
+      imageUrl: 'Pass for now'
+    ),
+
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +41,7 @@ class _LandingState extends State<Landing>{
         title:Text(
             "useMeBefore",
             style: GoogleFonts.lato(
-            fontSize: 27,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.onSecondaryContainer,
               ),
@@ -39,15 +59,15 @@ class _LandingState extends State<Landing>{
           )
         ],
       ),
+
       body: Center(
-        child: Text(
-            "Added items will be listed here...",
-            style:GoogleFonts.poppins(
-              fontSize: 15,
-              fontWeight: FontWeight.normal,
-              color: Colors.grey,
-            ) ,
-        ),
+        child: ListView.builder(
+          itemCount: foodList.length,
+          itemBuilder: (context, index) {
+            return FoodCard(food: foodList[index]);
+          },
+        )
+
       ),
     );
 
