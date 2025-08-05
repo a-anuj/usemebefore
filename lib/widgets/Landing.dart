@@ -65,7 +65,7 @@ class _LandingState extends State<Landing>{
                     ),
                     content: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
-                      height: 400, // fixed height or adjust as needed
+                      height: 520, // fixed height or adjust as needed
                       child: AddItemForm(),
                     ),
                   ),
