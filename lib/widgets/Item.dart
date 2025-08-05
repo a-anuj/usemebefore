@@ -23,8 +23,8 @@ class Item {
     };
   }
 
-  factory FoodItem.fromJson(Map<String, dynamic> json) {
-    return FoodItem(
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
       title: json['title'],
       expiryDate: json['expiryDate'],
       storage: json['storage'],
