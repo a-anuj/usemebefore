@@ -7,8 +7,6 @@ class ItemCard extends StatelessWidget {
   const ItemCard({super.key, required this.food});
   final Item food;
 
-
-
   @override
   Widget build(BuildContext context) {
     return Card(
