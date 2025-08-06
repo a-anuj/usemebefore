@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:usemebefore/widgets/Item.dart';
+import 'package:usemebefore/extensions/string_extensions.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({super.key, required this.food});
   final Item food;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +36,26 @@ class ItemCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(food.title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                Text(food.title, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                Text("Expires on: ${food.expiryDate}"),
-                Text("Storage: ${food.storage}"),
-                Text("Note: ${food.note}"),
+                Text(
+                    food.expiryDate.toPrettyDate(),
+                  style: GoogleFonts.lato(
+                    fontSize: 20
+                  ),
+                ),
+                Text(
+                  food.storage,
+                  style: GoogleFonts.lato(
+                    fontSize: 18
+                ),
+                ),
+                Text(
+                    food.note,
+                  style: GoogleFonts.lato(
+                      fontSize: 15
+                  ),
+                ),
               ],
             ),
           ),
