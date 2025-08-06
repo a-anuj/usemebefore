@@ -4,55 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:usemebefore/widgets/Item.dart';
 import 'package:usemebefore/widgets/ItemCard.dart';
 import 'package:usemebefore/widgets/AddItem.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Landing extends StatefulWidget{
-  const Landing ({super.key});
+class Landing extends StatefulWidget {
+  const Landing({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _LandingState();
-  }
+  State<StatefulWidget> createState() => _LandingState();
 }
 
-class _LandingState extends State<Landing>{
+class _LandingState extends State<Landing> {
   final uid = FirebaseAuth.instance.currentUser?.uid;
-  List<Item>? foodList;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUserItems();
-  }
-  void fetchUserItems() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return;
-
-    final snapshot = await FirebaseFirestore.instance
-        .collection('items')
-        .where('userId', isEqualTo: uid)
-        .get();
-
-    final items = snapshot.docs.map((doc) {
-      final data = doc.data();
-      print(data);
-      return Item(
-        title: data['title'],
-        expiryDate: data['expiryDate'],
-        storage: data['storage'],
-        note: data['note'],
-        imageUrl: data['imageUrl'],
-      );
-    }).toList();
-
-    setState(() {
-      foodList = items;
-    });
-  }
-
-
-
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -108,42 +71,103 @@ class _LandingState extends State<Landing>{
         ],
       ),
 
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('items')
-            .where('userId', isEqualTo: uid)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          // Search Field
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by title...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.toLowerCase();
+                });
+              },
+            ),
+          ),
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("No items added yet."));
-          }
+          // StreamBuilder for dynamic list
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('items')
+                  .where('userId', isEqualTo: uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          final docs = snapshot.data!.docs;
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(
+                      child: Text(
+                          "No items added yet.",
+                        style: GoogleFonts.lato(
+                          fontSize: 16,
+                          color: Colors.grey
+                        ),
+                      )
+                  );
+                }
 
-          final items = docs.map((doc) {
-            final data = doc.data();
-            return Item(
-              title: data['name'] ?? "",
-              expiryDate: data['expiry'] ?? "",
-              storage: data['storage'] ?? "",
-              note: data['note'] ?? "",
-              imageUrl: data['imageUrl'] ?? "",
-            );
-          }).toList();
+                final docs = snapshot.data!.docs;
 
-          return ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return ItemCard(food: items[index]);
-            },
-          );
-        },
+                final items = docs.map((doc) {
+                  final data = doc.data();
+                  return Item(
+                    id: doc.id ?? "",
+                    title: data['name'] ?? "",
+                    expiryDate: data['expiry'] ?? "",
+                    storage: data['storage'] ?? "",
+                    note: data['note'] ?? "",
+                    imageUrl: data['imageUrl'] ?? "",
+                  );
+                }).where((item) {
+                  return item.title.toLowerCase().contains(searchQuery);
+                }).toList();
+
+                if (items.isEmpty) {
+                  return const Center(child: Text("No items match your search."));
+                }
+
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+
+                    return Dismissible(
+                      key: Key(item.id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (_) async {
+                        await FirebaseFirestore.instance
+                            .collection('items')
+                            .doc(item.id)
+                            .delete();
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("${item.title} deleted")),
+                        );
+                      },
+                      child: ItemCard(food: item),
+                    );
+                  },
+                );
+
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-
 }
