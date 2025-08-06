@@ -122,13 +122,13 @@ class _AddItemFormState extends State<AddItemForm> {
           SizedBox(height: 15),
           TextFormField(
             controller: storageController,
-            decoration: InputDecoration(labelText: 'Fridge,Cupboard,shelf...', border: OutlineInputBorder()),
+            decoration: InputDecoration(hintText:"Fridge,Shelf...",labelText: 'Storage', border: OutlineInputBorder()),
             validator: (value) => value == null || value.isEmpty ? 'Storage is required' : null,
           ),
           SizedBox(height: 15),
           TextFormField(
             controller: noteController,
-            decoration: InputDecoration(labelText: 'Use for pasta/biriyani...', border: OutlineInputBorder()),
+            decoration: InputDecoration(hintText:"Use it for pasta...",labelText: 'Note', border: OutlineInputBorder()),
             validator: (value) => value == null || value.isEmpty ? 'Note is required' : null,
           ),
           SizedBox(height: 15),
