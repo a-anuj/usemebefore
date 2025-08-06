@@ -75,7 +75,7 @@ class _AddItemFormState extends State<AddItemForm> {
         final imageUrl = await ref.getDownloadURL();
 
         // 🔥 Save to Firestore
-        await _firebaseStore.collection('items').add({
+        final docRef = await _firebaseStore.collection('items').add({
           'userId': userId,
           'name': nameController.text.trim(),
           'storage': storageController.text.trim(),
@@ -84,6 +84,10 @@ class _AddItemFormState extends State<AddItemForm> {
           'imageUrl': imageUrl,
           'createdAt': FieldValue.serverTimestamp(),
         });
+
+        // 💥 Add the generated doc ID back into the doc
+        await docRef.update({'id': docRef.id});
+
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Item added.')),
@@ -118,13 +122,13 @@ class _AddItemFormState extends State<AddItemForm> {
           SizedBox(height: 15),
           TextFormField(
             controller: storageController,
-            decoration: InputDecoration(labelText: 'Storage', border: OutlineInputBorder()),
+            decoration: InputDecoration(labelText: 'Fridge,Cupboard,shelf...', border: OutlineInputBorder()),
             validator: (value) => value == null || value.isEmpty ? 'Storage is required' : null,
           ),
           SizedBox(height: 15),
           TextFormField(
             controller: noteController,
-            decoration: InputDecoration(labelText: 'Note', border: OutlineInputBorder()),
+            decoration: InputDecoration(labelText: 'Use for pasta/biriyani...', border: OutlineInputBorder()),
             validator: (value) => value == null || value.isEmpty ? 'Note is required' : null,
           ),
           SizedBox(height: 15),
