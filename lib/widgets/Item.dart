@@ -1,4 +1,5 @@
 class Item {
+  final String id;
   final String title;
   final String expiryDate;
   final String storage;
@@ -6,6 +7,7 @@ class Item {
   final String imageUrl;
 
   Item({
+    required this.id,
     required this.title,
     required this.expiryDate,
     required this.storage,
@@ -13,23 +15,5 @@ class Item {
     required this.imageUrl,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'expiryDate': expiryDate,
-      'storage': storage,
-      'note': note,
-      'imageUrl': imageUrl,
-    };
-  }
 
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
-      title: json['title'],
-      expiryDate: json['expiryDate'],
-      storage: json['storage'],
-      note: json['note'],
-      imageUrl: json['imageUrl'],
-    );
-  }
 }
