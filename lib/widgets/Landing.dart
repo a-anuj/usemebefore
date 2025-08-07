@@ -63,7 +63,7 @@ class _LandingState extends State<Landing> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   title: Text(
-                    "Add Food Item",
+                    "Add Item",
                     style: GoogleFonts.lato(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
