@@ -16,6 +16,7 @@ A smart Flutter app to track items with expiry dates – food, medicine, cosmeti
 - 🔍 **Search** by title  
 - 🗑️ **Swipe to Delete** expired or unwanted items  
 - ☁️ **Data Synced** with Firebase Firestore
+- 🔔 **Expiry Notifications** remind you before your items expire (using Flutter Local Notifications)
 
 
 ## Screenshots
@@ -36,6 +37,7 @@ A smart Flutter app to track items with expiry dates – food, medicine, cosmeti
 - **Frontend:** Flutter  
 - **Backend:** Firebase Auth + Firestore  
 - **Storage:** Firebase Storage  
+- **Notifications:** Flutter Local Notifications
 
 ## 📦 Installation
 
