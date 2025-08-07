@@ -5,6 +5,10 @@ import 'package:usemebefore/widgets/Item.dart';
 import 'package:usemebefore/widgets/ItemCard.dart';
 import 'package:usemebefore/widgets/AddItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+
 
 class Landing extends StatefulWidget {
   const Landing({super.key});
@@ -14,6 +18,22 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
+
+  @override
+  void initState() {
+    super.initState();
+    _requestNotificationPermission();
+  }
+
+  void _requestNotificationPermission() async {
+    final androidImplementation = _notifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (androidImplementation != null) {
+      final granted = await androidImplementation.requestNotificationsPermission();
+      // You may want to log or act depending on 'granted'
+      print('Notification permission granted: $granted');
+    }
+  }
   final uid = FirebaseAuth.instance.currentUser?.uid;
   String searchQuery = '';
 

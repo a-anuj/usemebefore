@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
+import 'package:usemebefore/widgets/notification_service.dart';
 
 final _firebase = FirebaseStorage.instance;
 final _firebaseStore = FirebaseFirestore.instance;
@@ -89,6 +89,26 @@ class _AddItemFormState extends State<AddItemForm> {
         // 💥 Add the generated doc ID back into the doc
         await docRef.update({'id': docRef.id});
 
+        DateTime expiryDate;
+        try {
+          expiryDate = DateFormat('dd-MM-yyyy').parse(expiryController.text.trim());
+        } catch (e) {
+          // In case parsing fails, fallback to current date (or handle error)
+          expiryDate = DateTime.now();
+        }
+
+        // Schedule notifications after successful add
+        await NotificationService.scheduleReminders(
+          title: nameController.text.trim(),
+          body: "Expiry approaching for ${nameController.text.trim()}",
+          expiryDate: expiryDate,
+          baseId: docRef.id.hashCode,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Item added and notifications scheduled.')),
+        );
+
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Item added.')),
@@ -99,7 +119,7 @@ class _AddItemFormState extends State<AddItemForm> {
           _isLoading=false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Something went wrong 😢')),
+          SnackBar(content: Text(e.toString())),
         );
       }
     } else {
