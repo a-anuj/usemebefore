@@ -9,7 +9,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
 
-
 class Landing extends StatefulWidget {
   const Landing({super.key});
 
@@ -18,6 +17,80 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+
+  void handleSignout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        contentPadding: const EdgeInsets.all(20),
+        content: SizedBox(
+          width: 250,
+          height: 150,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Logout",
+                style: GoogleFonts.lato(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Are you sure you want to logout?",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lato(
+                  fontSize: 17,
+                  color: Colors.black54,
+                ),
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.grey[600],
+                      textStyle: GoogleFonts.lato(fontSize: 16),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      textStyle: GoogleFonts.lato(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Logout"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -26,16 +99,102 @@ class _LandingState extends State<Landing> {
   }
 
   void _requestNotificationPermission() async {
-    final androidImplementation = _notifications.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImplementation = _notifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     if (androidImplementation != null) {
       final granted = await androidImplementation.requestNotificationsPermission();
-      // You may want to log or act depending on 'granted'
       print('Notification permission granted: $granted');
     }
   }
-  final uid = FirebaseAuth.instance.currentUser?.uid;
-  String searchQuery = '';
+
+  void _showAddItemDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          "Add Item",
+          style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: 520,
+          child: AddItemForm(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.inventory_2_outlined, size: 80, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              "Track your items before they expire!",
+              style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Add your first item to get started.",
+              style: GoogleFonts.lato(fontSize: 14, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _showAddItemDialog,
+              icon: const Icon(Icons.add),
+              label: const Text("Add Item"),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        height: 45,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: TextField(
+          textAlignVertical: TextAlignVertical.center,
+          controller: _searchController,
+          style: GoogleFonts.lato(fontSize: 16),
+          decoration: InputDecoration(
+            hintText: 'Search by title...',
+            hintStyle: GoogleFonts.lato(color: Colors.grey[600]),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          ),
+          onChanged: (value) {
+            setState(() {
+              searchQuery = value.toLowerCase();
+            });
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,62 +214,21 @@ class _LandingState extends State<Landing> {
         backgroundColor: const Color(0xFFE3F2FD),
         actions: [
           IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  title: Text(
-                    "Add Item",
-                    style: GoogleFonts.lato(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
-                  ),
-                  content: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 520,
-                    child: AddItemForm(),
-                  ),
-                ),
-              );
-            },
+            onPressed: _showAddItemDialog,
             icon: const Icon(Icons.add_circle),
           ),
           IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
+            onPressed: handleSignout,
             icon: Icon(
               Icons.logout_outlined,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
-          )
+          ),
         ],
       ),
-
       body: Column(
         children: [
-          // Search Field
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search by title...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.toLowerCase();
-                });
-              },
-            ),
-          ),
-
-          // StreamBuilder for dynamic list
+          _buildSearchBar(), // always visible
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
@@ -123,23 +241,14 @@ class _LandingState extends State<Landing> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(
-                      child: Text(
-                          "No items added yet.",
-                        style: GoogleFonts.lato(
-                          fontSize: 16,
-                          color: Colors.grey
-                        ),
-                      )
-                  );
+                  return _buildEmptyState();
                 }
 
                 final docs = snapshot.data!.docs;
-
                 final items = docs.map((doc) {
                   final data = doc.data();
                   return Item(
-                    id: doc.id ?? "",
+                    id: doc.id,
                     title: data['name'] ?? "",
                     expiryDate: data['expiry'] ?? "",
                     storage: data['storage'] ?? "",
@@ -158,7 +267,6 @@ class _LandingState extends State<Landing> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
-
                     return Dismissible(
                       key: Key(item.id),
                       direction: DismissDirection.endToStart,
@@ -173,7 +281,6 @@ class _LandingState extends State<Landing> {
                             .collection('items')
                             .doc(item.id)
                             .delete();
-                        ScaffoldMessenger.of(context).clearSnackBars();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("${item.title} deleted")),
                         );
@@ -182,7 +289,6 @@ class _LandingState extends State<Landing> {
                     );
                   },
                 );
-
               },
             ),
           ),
