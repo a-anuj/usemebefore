@@ -105,14 +105,11 @@ class _AddItemFormState extends State<AddItemForm> {
           baseId: docRef.id.hashCode,
         );
 
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Item added and notifications scheduled.')),
         );
 
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Item added.')),
-        );
         Navigator.pop(context);
       } catch (e) {
         setState(() {
